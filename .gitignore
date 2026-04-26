@@ -16,7 +16,10 @@ build/
 venv/
 env/
 ENV/
+
+# Environment variables (never commit)
 .env
+frontend/.env
 
 # Test cache
 .pytest_cache/
