@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { AuthPage } from "./components/AuthPage"
 import { TaskCard } from "./components/TaskCard"
 import { TaskForm } from "./components/TaskForm"
-import { taskService } from "./services/taskService"
+import { useAuth } from "./context/AuthContext"
+import { UnauthorizedError, createTaskService } from "./services/taskService"
 import type { Task, TaskCreate, TaskStatus, TaskUpdate } from "./types/task"
 
 type Filter = TaskStatus | "all"
@@ -12,7 +14,10 @@ const FILTERS: { label: string; value: Filter }[] = [
   { label: "Concluídas", value: "completed" },
 ]
 
-export default function App() {
+function TasksApp() {
+  const auth = useAuth()
+  const api = useMemo(() => createTaskService(auth.token!), [auth.token])
+
   const [tasks, setTasks] = useState<Task[]>([])
   const [filter, setFilter] = useState<Filter>("all")
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -20,41 +25,46 @@ export default function App() {
   const loadTasks = useCallback(async () => {
     setLoadError(null)
     try {
-      const data = await taskService.list(filter === "all" ? null : filter)
+      const data = await api.list(filter === "all" ? null : filter)
       setTasks(data)
     } catch (err) {
+      if (err instanceof UnauthorizedError) { auth.logout(); return }
       setLoadError(err instanceof Error ? err.message : "Erro ao carregar tarefas")
     }
-  }, [filter])
+  }, [api, filter, auth])
 
-  useEffect(() => {
-    void loadTasks()
-  }, [loadTasks])
+  useEffect(() => { void loadTasks() }, [loadTasks])
 
   async function handleCreate(data: TaskCreate) {
-    const task = await taskService.create(data)
+    const task = await api.create(data)
     setTasks((prev) => [task, ...prev])
   }
 
   async function handleComplete(id: number) {
-    const task = await taskService.complete(id)
+    const task = await api.complete(id)
     setTasks((prev) => prev.map((t) => (t.id === id ? task : t)))
   }
 
   async function handleUpdate(id: number, data: TaskUpdate) {
-    const task = await taskService.update(id, data)
+    const task = await api.update(id, data)
     setTasks((prev) => prev.map((t) => (t.id === id ? task : t)))
   }
 
   async function handleDelete(id: number) {
-    await taskService.remove(id)
+    await api.remove(id)
     setTasks((prev) => prev.filter((t) => t.id !== id))
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold text-gray-900">task-api</h1>
+        <button
+          onClick={auth.logout}
+          className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
+        >
+          Sair
+        </button>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
@@ -100,4 +110,9 @@ export default function App() {
       </main>
     </div>
   )
+}
+
+export default function App() {
+  const auth = useAuth()
+  return auth.token ? <TasksApp /> : <AuthPage />
 }

@@ -10,11 +10,11 @@ Fornecer uma micro-API leve e extensível para criação, listagem, atualizaçã
 
 A aplicação segue uma arquitetura em camadas com separação clara de responsabilidades:
 
-- **Frontend (React + Vite)** — interface do usuário, comunica com o backend via HTTP/JSON
-- **Controller** — recebe as requisições HTTP e retorna respostas JSON (FastAPI Router)
-- **Service** — implementa a lógica de negócio (validações, regras de status)
-- **Repository** — gerencia o acesso e persistência no banco de dados via SQLAlchemy ORM
-- **Banco de dados (PostgreSQL)** — armazena tarefas e metadados
+- **Frontend (React + Vite)** — interface do usuário, comunica com o backend via HTTP/JSON com token JWT
+- **Controller** — recebe as requisições HTTP, valida o token e retorna respostas JSON (FastAPI Router)
+- **Service** — implementa a lógica de negócio (validações, regras de status, autenticação)
+- **Repository** — gerencia o acesso e persistência no banco de dados via SQLAlchemy ORM, com isolamento por usuário
+- **Banco de dados (PostgreSQL)** — armazena usuários e tarefas
 
 O diagrama de componentes completo está em [docs/architecture.md](docs/architecture.md).
 
@@ -26,6 +26,8 @@ O diagrama de componentes completo está em [docs/architecture.md](docs/architec
 - **Pydantic v2** — validação e serialização de dados
 - **SQLAlchemy 2** — ORM e gerenciamento de sessões
 - **PostgreSQL** — banco de dados relacional
+- **PyJWT** — geração e verificação de tokens JWT
+- **passlib + bcrypt** — hashing seguro de senhas
 - **Uvicorn** — servidor ASGI
 
 **Frontend**
@@ -52,7 +54,7 @@ pip install -r requirements.txt
 
 # 4. Configure as variáveis de ambiente
 cp .env.example .env
-# edite .env com a URL do seu PostgreSQL
+# edite .env com a URL do PostgreSQL e uma SECRET_KEY forte
 
 # 5. Suba o servidor
 uvicorn app.main:app --reload
@@ -65,11 +67,21 @@ Documentação interativa: `http://localhost:8000/docs`
 
 ```bash
 cd frontend
+cp .env.example .env
 npm install
 npm run dev
 ```
 
 A interface estará disponível em `http://localhost:5173`.
+
+## Endpoints de autenticação
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `POST` | `/auth/register` | Cadastrar novo usuário |
+| `POST` | `/auth/login` | Autenticar e obter token JWT |
+
+Todos os endpoints de `/tasks` exigem o header `Authorization: Bearer <token>`.
 
 ## Roadmap
 
@@ -90,15 +102,13 @@ A interface estará disponível em `http://localhost:5173`.
 - [x] Filtro por status na interface
 
 ### v0.4 — Autenticação
-- [ ] Autenticação por API key ou JWT
-- [ ] Isolamento de tarefas por usuário no Repository
+- [x] Autenticação por JWT (registro e login)
+- [x] Isolamento de tarefas por usuário no Repository
 
 ### v0.5 — Qualidade
 - [ ] Testes por camada: controller, service e repository
-- [ ] CI com GitHub Actions
 - [ ] Cobertura mínima de 80%
 
 ### v1.0 — Produção
-- [ ] Deploy containerizado (Docker + docker-compose)
 - [ ] Variáveis de ambiente para todos os ambientes
 - [ ] Documentação OpenAPI completa

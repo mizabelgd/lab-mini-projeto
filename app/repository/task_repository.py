@@ -5,23 +5,23 @@ from app.models.task import Task
 from app.schemas.task import TaskCreate, TaskUpdate
 
 
-def create(db: Session, data: TaskCreate) -> Task:
-    task = Task(title=data.title, description=data.description)
+def create(db: Session, data: TaskCreate, user_id: int) -> Task:
+    task = Task(title=data.title, description=data.description, user_id=user_id)
     db.add(task)
     db.commit()
     db.refresh(task)
     return task
 
 
-def get_all(db: Session, status: TaskStatus | None = None) -> list[Task]:
-    query = db.query(Task)
+def get_all(db: Session, user_id: int, status: TaskStatus | None = None) -> list[Task]:
+    query = db.query(Task).filter(Task.user_id == user_id)
     if status is not None:
         query = query.filter(Task.status == status)
     return query.all()
 
 
-def get_by_id(db: Session, task_id: int) -> Task | None:
-    return db.query(Task).filter(Task.id == task_id).first()
+def get_by_id(db: Session, task_id: int, user_id: int) -> Task | None:
+    return db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
 
 
 def update(db: Session, task: Task, data: TaskUpdate) -> Task:
