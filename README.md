@@ -6,12 +6,25 @@ Micro-API para gestão de tarefas com priorização assistida por IA.
 
 Fornecer uma API leve e extensível para criação, listagem e priorização automática de tarefas, utilizando um modelo de linguagem para sugerir ordens de execução com base em contexto, prazo e descrição.
 
+## Arquitetura
+
+A aplicação segue uma arquitetura em camadas com separação clara de responsabilidades:
+
+- **Frontend (React)** — interface do usuário, comunica com o backend via HTTP/JSON
+- **Controller** — recebe as requisições HTTP e retorna respostas JSON
+- **Service** — implementa a lógica de negócio e priorização por IA
+- **Repository** — gerencia o acesso e persistência no banco de dados via SQLAlchemy ORM
+- **Banco de dados (PostgreSQL)** — armazena tarefas e metadados
+
+O diagrama de componentes completo está em [docs/architecture.md](docs/architecture.md).
+
 ## Stack
 
-- **Python 3.11+**
+- **Python 3.13+**
 - **FastAPI** — framework web
 - **Pydantic** — validação de dados
-- **SQLite / SQLAlchemy** — persistência local
+- **PostgreSQL / SQLAlchemy** — persistência
+- **React** — frontend
 - **Claude API (Anthropic)** — priorização assistida por IA
 - **Uvicorn** — servidor ASGI
 
