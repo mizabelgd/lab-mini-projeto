@@ -56,10 +56,10 @@ Documentação interativa: `http://localhost:8000/docs`
 ## Roadmap
 
 ### v0.1 — Base da arquitetura
-- [ ] Estrutura de pastas: `controller`, `service`, `repository`
-- [ ] Conexão com PostgreSQL via SQLAlchemy
-- [ ] Models e migrations iniciais (tabela de tarefas)
-- [ ] CRUD completo: criar, listar, atualizar e excluir tarefas
+- [x] Estrutura de pastas: `controller`, `service`, `repository`
+- [x] Conexão com PostgreSQL via SQLAlchemy
+- [x] Models e migrations iniciais (tabela de tarefas)
+- [x] CRUD completo: criar, listar, atualizar e excluir tarefas
 
 ### v0.2 — Funcionalidades de tarefas
 - [ ] Marcar tarefas como concluídas

@@ -3,7 +3,14 @@ from datetime import datetime, timezone
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from app.controller.task_controller import router as task_router
+from app.database import Base, engine
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(title="task-api")
+
+app.include_router(task_router)
 
 
 class HealthResponse(BaseModel):
