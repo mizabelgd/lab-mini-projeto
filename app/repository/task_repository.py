@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.enums import TaskStatus
 from app.models.task import Task
 from app.schemas.task import TaskCreate, TaskUpdate
 
@@ -12,8 +13,11 @@ def create(db: Session, data: TaskCreate) -> Task:
     return task
 
 
-def get_all(db: Session) -> list[Task]:
-    return db.query(Task).all()
+def get_all(db: Session, status: TaskStatus | None = None) -> list[Task]:
+    query = db.query(Task)
+    if status is not None:
+        query = query.filter(Task.status == status)
+    return query.all()
 
 
 def get_by_id(db: Session, task_id: int) -> Task | None:
@@ -23,6 +27,13 @@ def get_by_id(db: Session, task_id: int) -> Task | None:
 def update(db: Session, task: Task, data: TaskUpdate) -> Task:
     for field, value in data.model_dump(exclude_none=True).items():
         setattr(task, field, value)
+    db.commit()
+    db.refresh(task)
+    return task
+
+
+def complete(db: Session, task: Task) -> Task:
+    task.status = TaskStatus.COMPLETED
     db.commit()
     db.refresh(task)
     return task

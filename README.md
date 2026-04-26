@@ -62,9 +62,9 @@ Documentação interativa: `http://localhost:8000/docs`
 - [x] CRUD completo: criar, listar, atualizar e excluir tarefas
 
 ### v0.2 — Funcionalidades de tarefas
-- [ ] Marcar tarefas como concluídas
-- [ ] Filtrar tarefas por status (pendente, concluída)
-- [ ] Validação de campos com Pydantic
+- [x] Marcar tarefas como concluídas
+- [x] Filtrar tarefas por status (pendente, concluída)
+- [x] Validação de campos com Pydantic
 
 ### v0.3 — Frontend
 - [ ] Interface React para listagem e criação de tarefas
