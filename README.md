@@ -1,10 +1,10 @@
 # task-api
 
-Micro-API para gestão de tarefas com priorização assistida por IA.
+Uma API RESTful simples que permite criar, ler, atualizar e excluir tarefas. Pode incluir funcionalidades, entre elas marcar tarefas como concluídas e filtrar por status. A persistência dos dados pode ser feita em um banco de dados PostgreSQL.
 
 ## Objetivo
 
-Fornecer uma API leve e extensível para criação, listagem e priorização automática de tarefas, utilizando um modelo de linguagem para sugerir ordens de execução com base em contexto, prazo e descrição.
+Fornecer uma micro-API leve e extensível para criação, listagem, atualização e exclusão de tarefas.
 
 ## Arquitetura
 
@@ -55,21 +55,32 @@ Documentação interativa: `http://localhost:8000/docs`
 
 ## Roadmap
 
-### v0.1 — MVP
-- [ ] CRUD de tarefas (título, descrição, prazo, status)
-- [ ] Endpoint de priorização via IA
-- [ ] Persistência local com SQLite
+### v0.1 — Base da arquitetura
+- [ ] Estrutura de pastas: `controller`, `service`, `repository`
+- [ ] Conexão com PostgreSQL via SQLAlchemy
+- [ ] Models e migrations iniciais (tabela de tarefas)
+- [ ] CRUD completo: criar, listar, atualizar e excluir tarefas
 
-### v0.2 — Autenticação
-- [ ] Autenticação por API key
-- [ ] Isolamento de tarefas por usuário
+### v0.2 — Funcionalidades de tarefas
+- [ ] Marcar tarefas como concluídas
+- [ ] Filtrar tarefas por status (pendente, concluída)
+- [ ] Validação de campos com Pydantic
 
-### v0.3 — Qualidade
-- [ ] Testes automatizados com pytest
+### v0.3 — Frontend
+- [ ] Interface React para listagem e criação de tarefas
+- [ ] Ações de atualizar status e excluir
+- [ ] Filtro por status na interface
+
+### v0.4 — Autenticação
+- [ ] Autenticação por API key ou JWT
+- [ ] Isolamento de tarefas por usuário no Repository
+
+### v0.5 — Qualidade
+- [ ] Testes por camada: controller, service e repository
 - [ ] CI com GitHub Actions
 - [ ] Cobertura mínima de 80%
 
 ### v1.0 — Produção
-- [ ] Migração para PostgreSQL
-- [ ] Deploy containerizado (Docker)
+- [ ] Deploy containerizado (Docker + docker-compose)
+- [ ] Variáveis de ambiente para todos os ambientes
 - [ ] Documentação OpenAPI completa
