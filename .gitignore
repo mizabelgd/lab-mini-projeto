@@ -30,6 +30,9 @@ nosetests.xml
 coverage.xml
 *.cover
 
+# Test database
+test.db
+
 # Frontend
 frontend/node_modules/
 frontend/dist/

@@ -27,7 +27,7 @@ O diagrama de componentes completo está em [docs/architecture.md](docs/architec
 - **SQLAlchemy 2** — ORM e gerenciamento de sessões
 - **PostgreSQL** — banco de dados relacional
 - **PyJWT** — geração e verificação de tokens JWT
-- **passlib + bcrypt** — hashing seguro de senhas
+- **bcrypt** — hashing seguro de senhas
 - **Uvicorn** — servidor ASGI
 
 **Frontend**
@@ -74,6 +74,24 @@ npm run dev
 
 A interface estará disponível em `http://localhost:5173`.
 
+### Testes
+
+Os testes usam SQLite em arquivo local (`test.db`) e não precisam de PostgreSQL rodando.
+
+```bash
+# Instale as dependências de desenvolvimento
+pip install -r requirements-dev.txt
+
+# Rode a suíte completa com relatório de cobertura
+pytest
+
+# Rode um módulo específico
+pytest tests/test_tasks.py
+
+# Apenas relatório de cobertura sem threshold
+pytest --cov=app --cov-report=term-missing --no-cov-on-fail
+```
+
 ## Endpoints de autenticação
 
 | Método | Rota | Descrição |
@@ -106,8 +124,8 @@ Todos os endpoints de `/tasks` exigem o header `Authorization: Bearer <token>`.
 - [x] Isolamento de tarefas por usuário no Repository
 
 ### v0.5 — Qualidade
-- [ ] Testes por camada: controller, service e repository
-- [ ] Cobertura mínima de 80%
+- [x] Testes por camada: controller, service e repository
+- [x] Cobertura mínima de 80% (atual: 98.5%)
 
 ### v1.0 — Produção
 - [ ] Variáveis de ambiente para todos os ambientes

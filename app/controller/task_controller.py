@@ -14,7 +14,7 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 def create_task(
     data: TaskCreate,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(),
+    current_user: CurrentUser = None,
 ) -> TaskResponse:
     return task_service.create_task(db, data, current_user.id)
 
@@ -23,7 +23,7 @@ def create_task(
 def list_tasks(
     status: TaskStatus | None = Query(default=None),
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(),
+    current_user: CurrentUser = None,
 ) -> list[TaskResponse]:
     return task_service.list_tasks(db, current_user.id, status)
 
@@ -32,7 +32,7 @@ def list_tasks(
 def get_task(
     task_id: int,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(),
+    current_user: CurrentUser = None,
 ) -> TaskResponse:
     return task_service.get_task(db, task_id, current_user.id)
 
@@ -42,7 +42,7 @@ def update_task(
     task_id: int,
     data: TaskUpdate,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(),
+    current_user: CurrentUser = None,
 ) -> TaskResponse:
     return task_service.update_task(db, task_id, data, current_user.id)
 
@@ -51,7 +51,7 @@ def update_task(
 def complete_task(
     task_id: int,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(),
+    current_user: CurrentUser = None,
 ) -> TaskResponse:
     return task_service.complete_task(db, task_id, current_user.id)
 
@@ -60,6 +60,6 @@ def complete_task(
 def delete_task(
     task_id: int,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(),
+    current_user: CurrentUser = None,
 ) -> None:
     task_service.delete_task(db, task_id, current_user.id)
